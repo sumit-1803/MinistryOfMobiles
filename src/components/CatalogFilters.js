@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { X, Search, Filter } from 'lucide-react';
+import { X, Search, Filter, ChevronDown } from 'lucide-react';
 
 export default function CatalogFilters() {
   const router = useRouter();
@@ -13,6 +13,7 @@ export default function CatalogFilters() {
   const [minPrice, setMinPrice] = useState(searchParams.get('minPrice') || '');
   const [maxPrice, setMaxPrice] = useState(searchParams.get('maxPrice') || '');
   const [sort, setSort] = useState(searchParams.get('sort') || 'newest');
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const categories = [
     { id: 'phone', label: 'Mobiles' },
@@ -42,6 +43,7 @@ export default function CatalogFilters() {
     if (sort) params.set('sort', sort);
     
     router.push(`/catalog?${params.toString()}`);
+    setIsExpanded(false);
   };
 
   const clearFilters = () => {
@@ -55,20 +57,25 @@ export default function CatalogFilters() {
 
   return (
     <div className="bg-white/60 backdrop-blur-xl border border-white/20 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 sticky top-24">
-      <div className="flex items-center justify-between mb-8">
-        <h2 className="text-xl font-bold text-gray-900 flex items-center">
-          <Filter className="w-5 h-5 mr-2" />
+      <div className="flex items-center justify-between mb-4 lg:mb-8">
+        <button 
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="flex items-center gap-2 text-xl font-bold text-gray-900 w-full lg:w-auto lg:cursor-default focus:outline-none"
+        >
+          <Filter className="w-5 h-5" />
           Filters
-        </h2>
+          <ChevronDown className={`w-5 h-5 ml-auto lg:hidden transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
+        </button>
+        
         <button 
           onClick={clearFilters}
-          className="text-xs font-medium text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-full transition-colors"
+          className={`ml-4 text-xs font-medium text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-full transition-colors ${isExpanded ? 'block' : 'hidden lg:block'}`}
         >
           Clear all
         </button>
       </div>
 
-      <form onSubmit={applyFilters} className="space-y-8">
+      <form onSubmit={applyFilters} className={`space-y-8 ${isExpanded ? 'block' : 'hidden'} lg:block`}>
         {/* Search */}
         <div className="relative group">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
@@ -120,6 +127,47 @@ export default function CatalogFilters() {
           <div className="space-y-6">
             {/* Histogram & Slider Container */}
             <div className="relative pt-6 pb-2">
+              <style jsx>{`
+                .range-slider {
+                  -webkit-appearance: none;
+                  appearance: none;
+                  pointer-events: none;
+                  background: transparent;
+                }
+                .range-slider::-webkit-slider-thumb {
+                  pointer-events: auto;
+                  -webkit-appearance: none;
+                  appearance: none;
+                  height: 24px;
+                  width: 24px;
+                  border-radius: 50%;
+                  background: white;
+                  border: 1px solid #e5e7eb;
+                  cursor: pointer;
+                  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                  margin-top: -10px;
+                  position: relative;
+                  z-index: 50;
+                }
+                .range-slider::-moz-range-thumb {
+                  pointer-events: auto;
+                  height: 24px;
+                  width: 24px;
+                  border: 1px solid #e5e7eb;
+                  border-radius: 50%;
+                  background: white;
+                  cursor: pointer;
+                  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                  z-index: 50;
+                }
+                .range-slider::-webkit-slider-runnable-track {
+                  width: 100%;
+                  height: 4px;
+                  cursor: pointer;
+                  background: transparent;
+                }
+              `}</style>
+              
               {/* Histogram */}
               <div className="flex items-end justify-between h-12 gap-[2px] mb-2 px-1">
                 {[20, 45, 30, 60, 75, 50, 80, 95, 40, 30, 55, 70, 45, 25, 35, 50, 30, 20, 10, 5].map((height, i) => (
@@ -134,8 +182,9 @@ export default function CatalogFilters() {
                 ))}
               </div>
 
-              {/* Slider Track */}
-              <div className="relative h-1.5 bg-gray-200 rounded-full">
+              {/* Slider Track Background */}
+              <div className="relative h-1.5 bg-gray-200 rounded-full w-full">
+                {/* Active Range Track */}
                 <div 
                   className="absolute h-full bg-gray-900 rounded-full"
                   style={{
@@ -146,49 +195,31 @@ export default function CatalogFilters() {
               </div>
 
               {/* Range Inputs */}
-              <input
-                type="range"
-                min="0"
-                max="100000"
-                step="1000"
-                value={minPrice || 0}
-                onChange={(e) => {
-                  const val = Math.min(Number(e.target.value), (maxPrice || 100000) - 5000);
-                  setMinPrice(val);
-                }}
-                className="absolute top-6 left-0 w-full h-1.5 opacity-0 cursor-pointer z-10"
-              />
-              <input
-                type="range"
-                min="0"
-                max="100000"
-                step="1000"
-                value={maxPrice || 100000}
-                onChange={(e) => {
-                  const val = Math.max(Number(e.target.value), (minPrice || 0) + 5000);
-                  setMaxPrice(val);
-                }}
-                className="absolute top-6 left-0 w-full h-1.5 opacity-0 cursor-pointer z-10"
-              />
-
-              {/* Visual Thumbs (since inputs are hidden) */}
-              <div 
-                className="absolute top-6 w-8 h-8 bg-white border border-gray-200 rounded-full shadow-lg flex items-center justify-center pointer-events-none transform -translate-y-1/2 -translate-x-1/2 z-20"
-                style={{ left: `${((minPrice || 0) / 100000) * 100}%` }}
-              >
-                <div className="flex gap-1">
-                  <div className="w-[1px] h-3 bg-gray-400"></div>
-                  <div className="w-[1px] h-3 bg-gray-400"></div>
-                </div>
-              </div>
-              <div 
-                className="absolute top-6 w-8 h-8 bg-white border border-gray-200 rounded-full shadow-lg flex items-center justify-center pointer-events-none transform -translate-y-1/2 -translate-x-1/2 z-20"
-                style={{ left: `${((maxPrice || 100000) / 100000) * 100}%` }}
-              >
-                <div className="flex gap-1">
-                  <div className="w-[1px] h-3 bg-gray-400"></div>
-                  <div className="w-[1px] h-3 bg-gray-400"></div>
-                </div>
+              <div className="relative w-full h-0">
+                <input
+                  type="range"
+                  min="0"
+                  max="100000"
+                  step="1000"
+                  value={minPrice || 0}
+                  onChange={(e) => {
+                    const val = Math.min(Number(e.target.value), (maxPrice || 100000) - 1000);
+                    setMinPrice(val);
+                  }}
+                  className="range-slider absolute -top-2 left-0 w-full h-1.5 z-30"
+                />
+                <input
+                  type="range"
+                  min="0"
+                  max="100000"
+                  step="1000"
+                  value={maxPrice || 100000}
+                  onChange={(e) => {
+                    const val = Math.max(Number(e.target.value), (minPrice || 0) + 1000);
+                    setMaxPrice(val);
+                  }}
+                  className="range-slider absolute -top-2 left-0 w-full h-1.5 z-40"
+                />
               </div>
             </div>
 

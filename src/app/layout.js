@@ -16,16 +16,20 @@ export const metadata = {
 
 import { Analytics } from "@vercel/analytics/next";
 
+import Providers from "@/components/Providers";
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Navbar />
-        <main className="min-h-screen bg-gray-50">
-          {children}
-        </main>
-        <Footer />
-        <Analytics />
+        <Providers>
+          <Navbar />
+          <main className="min-h-screen bg-gray-50">
+            {children}
+          </main>
+          <Footer />
+          <Analytics />
+        </Providers>
       </body>
     </html>
   );

@@ -35,7 +35,16 @@ export default async function Catalog({ searchParams }) {
     sortOptions = { price: -1 };
   }
 
-  const products = await Product.find(query).sort(sortOptions);
+  const productsRaw = await Product.find(query).sort(sortOptions).lean();
+
+  const sanitizeProduct = (product) => ({
+    ...product,
+    _id: product._id.toString(),
+    createdAt: product.createdAt?.toISOString(),
+    updatedAt: product.updatedAt?.toISOString(),
+  });
+
+  const products = productsRaw.map(sanitizeProduct);
 
   return (
     <div className="bg-gray-50 min-h-screen">

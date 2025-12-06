@@ -2,6 +2,7 @@ import dbConnect from '@/lib/db';
 import Product from '@/models/Product';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import AddToCartButton from '@/components/AddToCartButton';
 
 export const dynamic = 'force-dynamic';
 

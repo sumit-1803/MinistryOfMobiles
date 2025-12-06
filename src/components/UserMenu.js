@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { User, LogOut, ShieldCheck, Users, X } from 'lucide-react';
-import { logoutAction } from '@/app/actions/auth';
+import SignOutButton from '@/components/SignOutButton';
 
 export default function UserMenu({ user }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -116,13 +116,9 @@ export default function UserMenu({ user }) {
             Your Profile
           </Link>
 
-          <button
-            onClick={() => logoutAction()}
+          <SignOutButton 
             className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center"
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            Sign out
-          </button>
+          />
         </div>
       )}
     </div>

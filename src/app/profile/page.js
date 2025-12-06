@@ -5,6 +5,7 @@ import { LogOut, User, Package, Heart } from 'lucide-react';
 import dbConnect from '@/lib/db';
 import Customer from '@/models/Customer';
 import ProductCard from '@/components/ProductCard';
+import SignOutButton from '@/components/SignOutButton';
 
 export default async function ProfilePage() {
   const session = await getSession();
@@ -16,12 +17,19 @@ export default async function ProfilePage() {
   const { user } = session;
 
   await dbConnect();
-  const customer = await Customer.findOne({ email: user.email }).populate('wishlist');
+  const customer = await Customer.findOne({ email: user.email }).populate('wishlist').lean();
   
-  // Filter out any null products (if product was deleted)
-  const wishlistItems = customer?.wishlist?.filter(item => item !== null) || [];
+  const sanitizeProduct = (product) => ({
+    ...product,
+    _id: product._id.toString(),
+    createdAt: product.createdAt?.toISOString(),
+    updatedAt: product.updatedAt?.toISOString(),
+  });
+
+  // Filter out any null products (if product was deleted) and sanitize
+  const wishlistItems = (customer?.wishlist?.filter(item => item !== null) || []).map(sanitizeProduct);
   // Create a list of IDs for the ProductCard check (all true since this is the wishlist page)
-  const wishlistIds = wishlistItems.map(item => item._id.toString());
+  const wishlistIds = wishlistItems.map(item => item._id);
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -45,15 +53,9 @@ export default async function ProfilePage() {
             </div>
             
             <div className="flex justify-end">
-              <form action={logoutAction}>
-                <button
-                  type="submit"
-                  className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                >
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Sign out
-                </button>
-              </form>
+              <SignOutButton 
+                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              />
             </div>
           </div>
         </div>

@@ -1,10 +1,17 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import WishlistButton from './WishlistButton';
+import { motion } from 'framer-motion';
 
 export default function ProductCard({ product, isWishlisted = false }) {
   return (
-    <div className="group relative bg-white border border-gray-200 rounded-lg flex flex-col overflow-hidden hover:shadow-lg transition-shadow duration-300">
+    <motion.div 
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.2 }}
+      className="group relative bg-white border border-gray-200 rounded-lg flex flex-col overflow-hidden hover:shadow-xl transition-shadow duration-300"
+    >
       <div className="aspect-w-3 aspect-h-4 bg-gray-200 group-hover:opacity-75 sm:aspect-none sm:h-96 relative h-64 w-full">
         {/* Placeholder image if no images */}
         {product.images && product.images.length > 0 ? (
@@ -43,6 +50,6 @@ export default function ProductCard({ product, isWishlisted = false }) {
       <div className="absolute top-2 right-2 z-30">
         <WishlistButton productId={product._id.toString()} initialIsWishlisted={isWishlisted} />
       </div>
-    </div>
+    </motion.div>
   );
 }
