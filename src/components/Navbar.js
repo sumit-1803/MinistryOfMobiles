@@ -1,8 +1,12 @@
 import Link from 'next/link';
 import { ShoppingBag, Menu } from 'lucide-react';
 import SearchBar from './SearchBar';
+import UserMenu from './UserMenu';
+import { getSession } from '@/lib/auth';
 
-export default function Navbar() {
+export default async function Navbar() {
+  const session = await getSession();
+
   return (
     <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,11 +37,14 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Right: Search & Cart */}
+          {/* Right: Search, Cart, User */}
           <div className="flex items-center space-x-4">
             <div className="hidden md:block w-64">
               <SearchBar />
             </div>
+            
+            <UserMenu user={session?.user} />
+
             <Link href="/cart" className="p-2 rounded-md text-gray-500 hover:text-gray-700 focus:outline-none">
               <span className="sr-only">View cart</span>
               <ShoppingBag className="h-5 w-5" />

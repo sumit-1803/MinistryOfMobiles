@@ -17,6 +17,7 @@ if (!cached) {
 
 async function dbConnect() {
   if (!MONGODB_URI) {
+    console.error('❌ MONGODB_URI is not defined');
     throw new Error(
       'Please define the MONGODB_URI environment variable inside .env.local'
     );

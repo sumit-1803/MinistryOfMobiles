@@ -39,5 +39,5 @@ export async function loginAction(prevState, formData) {
 
 export async function logoutAction() {
   await logout();
-  redirect('/admin/login');
+  redirect('/');
 }
