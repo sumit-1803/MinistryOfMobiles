@@ -2,6 +2,9 @@ import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { logoutAction } from '@/app/actions/auth';
 import { LogOut, User, Package, Heart } from 'lucide-react';
+import dbConnect from '@/lib/db';
+import Customer from '@/models/Customer';
+import ProductCard from '@/components/ProductCard';
 
 export default async function ProfilePage() {
   const session = await getSession();
@@ -12,9 +15,17 @@ export default async function ProfilePage() {
 
   const { user } = session;
 
+  await dbConnect();
+  const customer = await Customer.findOne({ email: user.email }).populate('wishlist');
+  
+  // Filter out any null products (if product was deleted)
+  const wishlistItems = customer?.wishlist?.filter(item => item !== null) || [];
+  // Create a list of IDs for the ProductCard check (all true since this is the wishlist page)
+  const wishlistIds = wishlistItems.map(item => item._id.toString());
+
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="bg-white shadow rounded-lg mb-6 overflow-hidden">
           <div className="bg-blue-600 h-32"></div>
@@ -48,9 +59,9 @@ export default async function ProfilePage() {
         </div>
 
         {/* Content Grid */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* My Orders */}
-          <div className="bg-white shadow rounded-lg p-6">
+          <div className="bg-white shadow rounded-lg p-6 lg:col-span-1 h-fit">
             <div className="flex items-center mb-4">
               <Package className="h-6 w-6 text-blue-600 mr-2" />
               <h2 className="text-lg font-medium text-gray-900">My Orders</h2>
@@ -65,20 +76,38 @@ export default async function ProfilePage() {
             </div>
           </div>
 
-          {/* Wishlist / Saved Items (Placeholder) */}
-          <div className="bg-white shadow rounded-lg p-6">
-            <div className="flex items-center mb-4">
+          {/* Saved Items */}
+          <div className="bg-white shadow rounded-lg p-6 lg:col-span-2">
+            <div className="flex items-center mb-6">
               <Heart className="h-6 w-6 text-red-500 mr-2" />
               <h2 className="text-lg font-medium text-gray-900">Saved Items</h2>
+              <span className="ml-2 bg-gray-100 text-gray-600 py-0.5 px-2.5 rounded-full text-xs font-medium">
+                {wishlistItems.length}
+              </span>
             </div>
-            <p className="text-gray-500 text-sm">
-              Your wishlist is empty.
-            </p>
-            <div className="mt-4">
-              <a href="/catalog" className="text-sm font-medium text-blue-600 hover:text-blue-500">
-                Browse products &rarr;
-              </a>
-            </div>
+            
+            {wishlistItems.length > 0 ? (
+              <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:gap-x-8">
+                {wishlistItems.map((product) => (
+                  <ProductCard 
+                    key={product._id} 
+                    product={product} 
+                    isWishlisted={true}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <Heart className="mx-auto h-12 w-12 text-gray-300" />
+                <h3 className="mt-2 text-sm font-medium text-gray-900">No saved items</h3>
+                <p className="mt-1 text-sm text-gray-500">Start saving items you love.</p>
+                <div className="mt-6">
+                  <a href="/catalog" className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Browse Catalog
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

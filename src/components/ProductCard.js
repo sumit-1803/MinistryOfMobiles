@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import WishlistButton from './WishlistButton';
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, isWishlisted = false }) {
   return (
     <div className="group relative bg-white border border-gray-200 rounded-lg flex flex-col overflow-hidden hover:shadow-lg transition-shadow duration-300">
       <div className="aspect-w-3 aspect-h-4 bg-gray-200 group-hover:opacity-75 sm:aspect-none sm:h-96 relative h-64 w-full">
@@ -22,6 +23,7 @@ export default function ProductCard({ product }) {
                 Sold Out
              </div>
         )}
+        
       </div>
       <div className="flex-1 p-4 space-y-2 flex flex-col">
         <h3 className="text-sm font-medium text-gray-900">
@@ -35,6 +37,11 @@ export default function ProductCard({ product }) {
           <p className="text-sm italic text-gray-500">{product.condition}</p>
           <p className="text-base font-medium text-gray-900">₹{product.price.toLocaleString()}</p>
         </div>
+      </div>
+      
+      {/* Wishlist Button - Placed here to ensure it sits on top of the Link overlay */}
+      <div className="absolute top-2 right-2 z-30">
+        <WishlistButton productId={product._id.toString()} initialIsWishlisted={isWishlisted} />
       </div>
     </div>
   );

@@ -22,6 +22,15 @@ const CustomerSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  wishlist: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product',
+  }],
 });
 
-export default mongoose.models.Customer || mongoose.model('Customer', CustomerSchema);
+// Force recompilation of the model to pick up schema changes during development
+if (mongoose.models.Customer) {
+  delete mongoose.models.Customer;
+}
+
+export default mongoose.model('Customer', CustomerSchema);

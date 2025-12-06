@@ -15,6 +15,7 @@ export default async function Navbar() {
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="flex items-center">
               <img src="/logo.png" alt="Ministry of Mobiles" className="h-10 w-auto" />
+              <span className="ml-2 text-[#d5c357] font-bold text-lg hidden lg:block">Ministry of Mobiles</span>
             </Link>
           </div>
 
@@ -22,6 +23,9 @@ export default async function Navbar() {
           <div className="hidden md:flex space-x-8">
             <Link href="/catalog?category=phone" className="text-gray-600 hover:text-gray-900 text-sm font-medium">
               Mobiles
+            </Link>
+            <Link href="/catalog?category=tablet" className="text-gray-600 hover:text-gray-900 text-sm font-medium">
+              Tablets
             </Link>
             <Link href="/catalog?category=macbook" className="text-gray-600 hover:text-gray-900 text-sm font-medium">
               Mac

@@ -1,17 +1,50 @@
 import dbConnect from '@/lib/db';
 import Product from '@/models/Product';
+import Customer from '@/models/Customer';
 import ProductCard from '@/components/ProductCard';
 import Link from 'next/link';
 import { Smartphone, Tablet, Laptop, Headphones, CheckCircle, ShieldCheck, Truck, ArrowRight } from 'lucide-react';
+import { getSession } from '@/lib/auth';
+
+import ProductRow from '@/components/ProductRow';
+import AboutSection from '@/components/AboutSection';
 
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   await dbConnect();
-  // Fetch latest 4 available products
-  const products = await Product.find({ isAvailable: true })
+  
+  // Fetch latest products
+  const latestProducts = await Product.find({ isAvailable: true })
     .sort({ createdAt: -1 })
     .limit(4);
+
+  // Fetch Laptops (MacBooks)
+  const laptops = await Product.find({ 
+    isAvailable: true, 
+    category: { $in: ['macbook', 'laptop'] } 
+  }).sort({ createdAt: -1 }).limit(4);
+
+  // Fetch Watches
+  const watches = await Product.find({ 
+    isAvailable: true, 
+    category: 'watch' 
+  }).sort({ createdAt: -1 }).limit(4);
+
+  // Fetch iPads
+  const ipads = await Product.find({ 
+    isAvailable: true, 
+    category: { $in: ['ipad', 'tablet'] } 
+  }).sort({ createdAt: -1 }).limit(4);
+
+  const session = await getSession();
+  let wishlist = [];
+  if (session && session.user) {
+    const customer = await Customer.findOne({ email: session.user.email });
+    if (customer && customer.wishlist) {
+      wishlist = customer.wishlist.map(id => id.toString());
+    }
+  }
 
   const categories = [
     { name: 'Phones', icon: Smartphone, href: '/catalog?category=phone' },
@@ -34,7 +67,7 @@ export default async function Home() {
     {
       name: 'Expert Support',
       description: 'Our team is here to help you find the perfect device.',
-      icon: Truck, // Using Truck as a placeholder for "Service/Delivery" or similar
+      icon: Truck,
     },
   ];
 
@@ -117,36 +150,40 @@ export default async function Home() {
         </div>
       </div>
 
-      {/* Featured Products */}
-      <div className="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h2 className="text-3xl font-extrabold tracking-tight text-gray-900">Featured Products</h2>
-            <p className="mt-2 text-sm text-gray-500">Check out our latest arrivals</p>
-          </div>
-          <Link href="/catalog" className="hidden sm:flex items-center text-sm font-medium text-blue-600 hover:text-blue-500">
-            View all <ArrowRight className="ml-1 h-4 w-4" />
-          </Link>
-        </div>
-        
-        {products.length > 0 ? (
-          <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-4 xl:gap-x-8">
-            {products.map((product) => (
-              <ProductCard key={product._id} product={product} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12 bg-white rounded-lg shadow-sm">
-            <p className="text-gray-500 text-lg">Inventory is being updated. Check back soon!</p>
-          </div>
-        )}
-        
-        <div className="mt-8 sm:hidden">
-            <Link href="/catalog" className="block w-full text-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-600 bg-blue-50 hover:bg-blue-100">
-                View all products
-            </Link>
-        </div>
-      </div>
+      {/* Latest Arrivals */}
+      <ProductRow 
+        title="Latest Arrivals" 
+        products={latestProducts} 
+        viewAllLink="/catalog?sort=newest" 
+        wishlist={wishlist}
+      />
+
+      {/* Laptops Section */}
+      <ProductRow 
+        title="Refurbished Laptops" 
+        products={laptops} 
+        viewAllLink="/catalog?category=macbook" 
+        wishlist={wishlist}
+      />
+
+      {/* Watches Section */}
+      <ProductRow 
+        title="Watches" 
+        products={watches} 
+        viewAllLink="/catalog?category=watch" 
+        wishlist={wishlist}
+      />
+
+      {/* iPads Section */}
+      <ProductRow 
+        title="iPads & Tablets" 
+        products={ipads} 
+        viewAllLink="/catalog?category=ipad" 
+        wishlist={wishlist}
+      />
+
+      {/* About Section */}
+      <AboutSection />
 
       {/* Why Choose Us */}
       <div className="bg-blue-700">

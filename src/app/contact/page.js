@@ -1,4 +1,4 @@
-import { Phone, Mail, Instagram, Clock, MapPin } from 'lucide-react';
+import { Phone, Mail, Instagram, Clock, MapPin, Youtube } from 'lucide-react';
 
 export default function Contact() {
   return (
@@ -96,6 +96,26 @@ export default function Contact() {
             </div>
           </div>
 
+          {/* YouTube */}
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div className="p-6">
+              <div className="flex items-center">
+                <div className="flex-shrink-0 bg-red-100 rounded-md p-3">
+                  <Youtube className="h-6 w-6 text-red-600" />
+                </div>
+                <div className="ml-4">
+                  <h3 className="text-lg font-medium text-gray-900">YouTube</h3>
+                  <p className="mt-1 text-gray-500">Watch reviews & unboxings</p>
+                </div>
+              </div>
+              <div className="mt-4">
+                <a href="https://www.youtube.com/@chiragbajaj9244" target="_blank" rel="noopener noreferrer" className="text-lg font-semibold text-red-600 hover:text-red-500">
+                  @chiragbajaj9244
+                </a>
+              </div>
+            </div>
+          </div>
+
            {/* Location */}
            <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 sm:col-span-2 lg:col-span-2">
             <div className="p-6">
@@ -110,16 +130,21 @@ export default function Contact() {
               </div>
               <div className="mt-4">
                 <p className="text-lg text-gray-900">
+                  Ministry of Mobiles <br/>
                   B- 138, Gali No. 7, Block C, Kiran Garden, <br/>
                   Nawada, New Delhi, Delhi, 110059
                 </p>
                 {/* Decorative Map Placeholder */}
-                <div className="mt-4 h-48 bg-gray-200 rounded-lg flex items-center justify-center relative overflow-hidden">
-                    <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#4b5563_1px,transparent_1px)] [background-size:16px_16px]"></div>
-                    <span className="text-gray-500 font-medium z-10 flex items-center">
-                        <MapPin className="h-5 w-5 mr-2" />
-                        View on Google Maps
-                    </span>
+                <div className="mt-4 h-64 w-full rounded-lg overflow-hidden shadow-sm border border-gray-200">
+                  <iframe 
+                    src="https://maps.google.com/maps?width=100%25&height=600&hl=en&q=Ministry%20of%20Mobiles%20Nawada%20Delhi&t=&z=15&ie=UTF8&iwloc=B&output=embed" 
+                    width="100%" 
+                    height="100%" 
+                    style={{ border: 0 }} 
+                    allowFullScreen="" 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                  ></iframe>
                 </div>
               </div>
             </div>
