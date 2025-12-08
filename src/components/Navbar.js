@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ShoppingBag, Menu } from 'lucide-react';
 import SearchBar from './SearchBar';
 import UserMenu from './UserMenu';
@@ -14,7 +15,7 @@ export default async function Navbar() {
           {/* Left: Logo */}
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="flex items-center">
-              <img src="/logo.png" alt="Ministry of Mobiles" className="h-10 w-auto" />
+              <Image src="/logo.png" alt="Ministry of Mobiles" width={40} height={40} className="h-10 w-auto" />
               <span className="ml-2 text-[#d5c357] font-bold text-lg hidden lg:block">Ministry of Mobiles</span>
             </Link>
           </div>

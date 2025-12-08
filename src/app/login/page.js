@@ -26,6 +26,7 @@ export default function CustomerLogin() {
 
   useEffect(() => {
     if (sendState?.success) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStep('otp');
       if (sendState.email) setEmail(sendState.email);
     }
@@ -70,7 +71,7 @@ export default function CustomerLogin() {
               )}
 
               <div className="text-sm text-gray-500 text-center">
-                <p>Note: Please check your spam folder if you don't see the email.</p>
+                <p>Note: Please check your spam folder if you don&apos;t see the email.</p>
               </div>
 
               <div>

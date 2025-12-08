@@ -15,9 +15,11 @@ export default function ProductCard({ product, isWishlisted = false }) {
       <div className="aspect-w-3 aspect-h-4 bg-gray-200 group-hover:opacity-75 sm:aspect-none sm:h-96 relative h-64 w-full">
         {/* Placeholder image if no images */}
         {product.images && product.images.length > 0 ? (
-           <img
+           <Image
             src={product.images[0]}
             alt={product.title}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="w-full h-full object-cover object-center"
           />
         ) : (

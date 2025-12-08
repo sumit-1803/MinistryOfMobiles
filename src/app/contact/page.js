@@ -12,7 +12,7 @@ export default function Contact() {
               Get in Touch
             </p>
             <p className="max-w-xl mt-5 mx-auto text-xl text-blue-100">
-              Have questions about a product? Need help with an order? We're here to help.
+              Have questions about a product? Need help with an order? We&apos;re here to help.
             </p>
           </div>
         </div>

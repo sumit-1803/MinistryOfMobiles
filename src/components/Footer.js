@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin, Youtube } from 'lucide-react';
 
 export default function Footer() {
@@ -8,7 +9,7 @@ export default function Footer() {
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           <div className="space-y-8 xl:col-span-1">
             <div className="flex items-center space-x-3">
-              <img src="/logo.png" alt="Ministry of Mobiles" className="h-16 w-auto rounded-full border-2 border-yellow-500" />
+              <Image src="/logo.png" alt="Ministry of Mobiles" width={64} height={64} className="h-16 w-auto rounded-full border-2 border-yellow-500" />
             </div>
             <p className="text-gray-400 text-base">
               Your trusted destination for premium second-hand electronics. Quality checked, affordable, and reliable.

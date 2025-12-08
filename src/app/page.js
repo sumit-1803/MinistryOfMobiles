@@ -3,6 +3,7 @@ import Product from '@/models/Product';
 import Customer from '@/models/Customer';
 import ProductCard from '@/components/ProductCard';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Smartphone, Tablet, Laptop, Headphones, CheckCircle, ShieldCheck, Truck, ArrowRight } from 'lucide-react';
 import { getSession } from '@/lib/auth';
 
@@ -108,7 +109,7 @@ export default async function Home() {
                     <span className="block text-blue-600 xl:inline">Electronics</span>
                   </h1>
                   <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                    Delhi's most trusted store for pre-owned iPhones, MacBooks, and iPads. 
+                    Delhi&apos;s most trusted store for pre-owned iPhones, MacBooks, and iPads. 
                     Experience premium tech without the premium price tag.
                   </p>
                   <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
@@ -135,10 +136,12 @@ export default async function Home() {
           </div>
         </div>
         <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-          <img
+          <Image
             className="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
             src="https://images.unsplash.com/photo-1761581327147-624debe5a874?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             alt="Electronics Store"
+            width={1169}
+            height={800}
           />
         </div>
       </div>

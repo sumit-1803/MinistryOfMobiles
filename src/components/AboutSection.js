@@ -39,10 +39,10 @@ export default function AboutSection() {
               <span className="text-blue-600">Ministry of Mobiles</span>
             </h2>
             <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-              Hi, I'm <strong>Mohit Arora</strong>. I started Ministry of Mobiles in 2020 with a simple mission: to make premium technology accessible to everyone in Delhi without the premium price tag.
+              Hi, I&apos;m <strong>Mohit Arora</strong>. I started Ministry of Mobiles in 2020 with a simple mission: to make premium technology accessible to everyone in Delhi without the premium price tag.
             </p>
             <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-              What began as a small passion project has grown into Delhi's most trusted destination for refurbished Apple devices. I personally oversee the quality of every device that enters our store, ensuring you get nothing but the best.
+              What began as a small passion project has grown into Delhi&apos;s most trusted destination for refurbished Apple devices. I personally oversee the quality of every device that enters our store, ensuring you get nothing but the best.
             </p>
 
             <div className="grid grid-cols-2 gap-6 mb-8">

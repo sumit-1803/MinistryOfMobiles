@@ -37,10 +37,10 @@ export default function AboutPage() {
                 Ministry of Mobiles was founded in 2020 by <strong>Mohit Arora</strong>, a tech enthusiast with a vision to revolutionize the refurbished electronics market in Delhi.
               </p>
               <p>
-                "I noticed a gap in the market," says Mohit. "People wanted premium devices like iPhones and MacBooks, but the prices were often out of reach. On the other hand, the used market was full of uncertainty and lack of trust."
+                &quot;I noticed a gap in the market,&quot; says Mohit. &quot;People wanted premium devices like iPhones and MacBooks, but the prices were often out of reach. On the other hand, the used market was full of uncertainty and lack of trust.&quot;
               </p>
               <p>
-                That's where Ministry of Mobiles comes in. We bridge that gap by offering high-quality, rigorously tested pre-owned devices that look and feel like new, but at a fraction of the cost.
+                That&apos;s where Ministry of Mobiles comes in. We bridge that gap by offering high-quality, rigorously tested pre-owned devices that look and feel like new, but at a fraction of the cost.
               </p>
               <p>
                 Over the years, we have served thousands of happy customers, building a reputation for honesty, quality, and exceptional after-sales support.

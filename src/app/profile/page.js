@@ -69,7 +69,7 @@ export default async function ProfilePage() {
               <h2 className="text-lg font-medium text-gray-900">My Orders</h2>
             </div>
             <p className="text-gray-500 text-sm">
-              You haven't placed any orders yet.
+              You haven&apos;t placed any orders yet.
             </p>
             <div className="mt-4">
               <a href="/catalog" className="text-sm font-medium text-blue-600 hover:text-blue-500">

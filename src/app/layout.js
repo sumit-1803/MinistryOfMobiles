@@ -9,9 +9,6 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
   title: "Ministry of Mobiles - Second Hand Electronics",
   description: "Best deals on iPhones, iPads, MacBooks, and more in Nevada, Delhi.",
-  icons: {
-    icon: '/icon.png',
-  },
 };
 
 import { Analytics } from "@vercel/analytics/next";

@@ -2,6 +2,7 @@
 
 import { useCart } from '@/context/CartContext';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Trash2, ArrowRight, CheckCircle, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -17,7 +18,7 @@ export default function CartPage() {
           className="text-center"
         >
           <h2 className="text-3xl font-extrabold text-gray-900">No active inquiries</h2>
-          <p className="mt-4 text-lg text-gray-500">You haven't inquired about any products yet.</p>
+          <p className="mt-4 text-lg text-gray-500">You haven&apos;t inquired about any products yet.</p>
           <div className="mt-6">
             <Link href="/catalog" className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors">
               Browse Products
@@ -62,9 +63,11 @@ export default function CartPage() {
               >
                 <div className="p-4 sm:p-6 flex items-center">
                   <div className="flex-shrink-0 relative">
-                    <img
+                    <Image
                       src={product.images?.[0] || 'https://via.placeholder.com/150'}
                       alt={product.title}
+                      width={100}
+                      height={100}
                       className="w-20 h-20 rounded-md object-center object-cover sm:w-24 sm:h-24"
                     />
                     <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm flex items-center">

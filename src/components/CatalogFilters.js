@@ -26,6 +26,7 @@ export default function CatalogFilters() {
 
   // Update state when URL params change
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSearch(searchParams.get('search') || '');
     setCategory(searchParams.get('category') || '');
     setMinPrice(searchParams.get('minPrice') || '');
