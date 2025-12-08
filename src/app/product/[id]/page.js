@@ -28,7 +28,7 @@ export default async function ProductDetail({ params }) {
         <div className="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
           {/* Image gallery */}
           <div className="flex flex-col-reverse">
-            <div className="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden sm:aspect-w-2 sm:aspect-h-3">
+            <div className="w-full relative aspect-square bg-gray-200 rounded-lg overflow-hidden">
               {product.images && product.images.length > 0 ? (
                 <Image
                   src={product.images[0]}
