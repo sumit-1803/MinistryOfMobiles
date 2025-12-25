@@ -56,9 +56,9 @@ export default async function Catalog({ searchParams }) {
           </div>
 
           {/* Product Grid */}
-          <div className="flex-1">
+          <div className="flex-1 w-full">
             {products.length > 0 ? (
-              <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:gap-x-8">
+              <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
                 {products.map((product) => (
                   <ProductCard key={product._id} product={product} />
                 ))}

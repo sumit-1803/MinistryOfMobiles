@@ -102,19 +102,42 @@ export default function UserMenu({ user }) {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 z-50">
           <div className="px-4 py-2 text-xs text-gray-500 border-b border-gray-100">
-            Signed in as <br />
-            <span className="font-medium text-gray-900 truncate block">
-              {user.email}
-            </span>
+            {user.role === 'admin' ? (
+              <>
+                Logged in as <br />
+                <span className="font-medium text-gray-900 truncate block">
+                  Admin
+                </span>
+              </>
+            ) : (
+              <>
+                Signed in as <br />
+                <span className="font-medium text-gray-900 truncate block">
+                  {user.email}
+                </span>
+              </>
+            )}
           </div>
           
-          <Link
-            href="/profile"
-            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            onClick={() => setIsOpen(false)}
-          >
-            Your Profile
-          </Link>
+          {user.role !== 'admin' && (
+            <Link
+              href="/profile"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              onClick={() => setIsOpen(false)}
+            >
+              Your Profile
+            </Link>
+          )}
+
+          {user.role === 'admin' && (
+            <Link
+              href="/admin/dashboard"
+              className="block px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 font-medium"
+              onClick={() => setIsOpen(false)}
+            >
+              Admin Dashboard
+            </Link>
+          )}
 
           <SignOutButton 
             className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center"

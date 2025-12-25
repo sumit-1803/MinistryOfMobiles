@@ -4,6 +4,7 @@ import { logoutAction } from '@/app/actions/auth';
 import { LogOut, User, Package, Heart } from 'lucide-react';
 import dbConnect from '@/lib/db';
 import Customer from '@/models/Customer';
+import Order from '@/models/Order';
 import ProductCard from '@/components/ProductCard';
 import SignOutButton from '@/components/SignOutButton';
 
@@ -18,6 +19,7 @@ export default async function ProfilePage() {
 
   await dbConnect();
   const customer = await Customer.findOne({ email: user.email }).populate('wishlist').lean();
+  const orders = await Order.find({ email: user.email }).populate('productId').sort({ createdAt: -1 }).lean();
   
   const sanitizeProduct = (product) => ({
     ...product,
@@ -66,16 +68,46 @@ export default async function ProfilePage() {
           <div className="bg-white shadow rounded-lg p-6 lg:col-span-1 h-fit">
             <div className="flex items-center mb-4">
               <Package className="h-6 w-6 text-blue-600 mr-2" />
-              <h2 className="text-lg font-medium text-gray-900">My Orders</h2>
+              <h2 className="text-lg font-medium text-gray-900">My Orders / Inquiries</h2>
             </div>
-            <p className="text-gray-500 text-sm">
-              You haven&apos;t placed any orders yet.
-            </p>
-            <div className="mt-4">
-              <a href="/catalog" className="text-sm font-medium text-blue-600 hover:text-blue-500">
-                Start shopping &rarr;
-              </a>
-            </div>
+            
+            {orders.length > 0 ? (
+              <div className="space-y-4">
+                {orders.map((order) => (
+                  <div key={order._id.toString()} className="border border-gray-200 rounded-lg p-4">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-medium text-gray-900">{order.productId?.title || 'Product Unavailable'}</p>
+                        <p className="text-xs text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</p>
+                      </div>
+                      <span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
+                        order.status === 'new' ? 'bg-green-100 text-green-800' : 
+                        order.status === 'contacted' ? 'bg-yellow-100 text-yellow-800' : 
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                      </span>
+                    </div>
+                    {order.message && (
+                      <p className="mt-2 text-sm text-gray-600 line-clamp-2">
+                        &quot;{order.message}&quot;
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <>
+                <p className="text-gray-500 text-sm">
+                  You haven&apos;t placed any orders yet.
+                </p>
+                <div className="mt-4">
+                  <a href="/catalog" className="text-sm font-medium text-blue-600 hover:text-blue-500">
+                    Start shopping &rarr;
+                  </a>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Saved Items */}

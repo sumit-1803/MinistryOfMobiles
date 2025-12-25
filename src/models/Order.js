@@ -14,6 +14,17 @@ const OrderSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide phone number.'],
   },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Customer',
+  },
+  email: {
+    type: String,
+  },
+  viewed: {
+    type: Boolean,
+    default: false,
+  },
   message: {
     type: String,
   },

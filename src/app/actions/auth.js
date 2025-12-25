@@ -33,7 +33,7 @@ export async function loginAction(prevState, formData) {
     return { message: 'Invalid credentials' };
   }
 
-  await login({ username: user.username, id: user._id.toString() });
+  await login({ username: user.username, id: user._id.toString(), role: 'admin' });
   redirect('/admin/dashboard');
 }
 

@@ -25,7 +25,7 @@ export default async function Navbar() {
             <Link href="/catalog?category=phone" className="text-gray-600 hover:text-gray-900 text-sm font-medium">
               Mobiles
             </Link>
-            <Link href="/catalog?category=tablet" className="text-gray-600 hover:text-gray-900 text-sm font-medium">
+            <Link href="/catalog?category=ipad" className="text-gray-600 hover:text-gray-900 text-sm font-medium">
               Tablets
             </Link>
             <Link href="/catalog?category=macbook" className="text-gray-600 hover:text-gray-900 text-sm font-medium">
@@ -50,10 +50,12 @@ export default async function Navbar() {
             
             <UserMenu user={session?.user} />
 
-            <Link href="/cart" className="p-2 rounded-md text-gray-500 hover:text-gray-700 focus:outline-none">
-              <span className="sr-only">View cart</span>
-              <ShoppingBag className="h-5 w-5" />
-            </Link>
+            {session?.user?.role !== 'admin' && (
+              <Link href="/cart" className="p-2 rounded-md text-gray-500 hover:text-gray-700 focus:outline-none">
+                <span className="sr-only">View cart</span>
+                <ShoppingBag className="h-5 w-5" />
+              </Link>
+            )}
           </div>
         </div>
       </div>

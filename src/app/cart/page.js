@@ -3,11 +3,46 @@
 import { useCart } from '@/context/CartContext';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Trash2, ArrowRight, CheckCircle, Clock } from 'lucide-react';
+import { Trash2, ArrowRight, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { getUserOrders } from '@/app/actions/order';
 
 export default function CartPage() {
-  const { cart, removeFromCart, clearCart } = useCart();
+  const { cart, removeFromCart } = useCart();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchOrders() {
+      try {
+        const userOrders = await getUserOrders();
+        setOrders(userOrders);
+      } catch (error) {
+        console.error('Failed to fetch orders:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchOrders();
+  }, []);
+
+  const getOrderStatus = (productId) => {
+    const order = orders.find(o => o.productId === productId);
+    if (!order) return null;
+    return {
+      status: order.status,
+      label: order.status === 'new' ? 'Inquiry Sent' : 
+             order.status === 'contacted' ? 'Contacted' : 
+             order.status === 'closed' ? 'Closed' : 'Unknown',
+      color: order.status === 'new' ? 'text-blue-600' : 
+             order.status === 'contacted' ? 'text-yellow-600' : 
+             order.status === 'closed' ? 'text-gray-600' : 'text-gray-500',
+      bg: order.status === 'new' ? 'bg-blue-50' : 
+          order.status === 'contacted' ? 'bg-yellow-50' : 
+          order.status === 'closed' ? 'bg-gray-50' : 'bg-gray-50'
+    };
+  };
 
   if (cart.length === 0) {
     return (
@@ -40,69 +75,81 @@ export default function CartPage() {
         >
           <h1 className="text-3xl font-extrabold text-gray-900">Your Inquiries</h1>
           <p className="mt-2 text-lg text-gray-600">
-            You have successfully inquired about the following products.
+            Track the status of your product inquiries here.
           </p>
-          <div className="mt-4 bg-green-50 border border-green-200 rounded-lg p-4 inline-block">
-            <div className="flex items-center justify-center text-green-700">
-              <CheckCircle className="h-5 w-5 mr-2" />
-              <span className="font-medium">Our team will contact you shortly regarding these items.</span>
-            </div>
-          </div>
         </motion.div>
 
         <ul className="space-y-4">
           <AnimatePresence>
-            {cart.map((product, index) => (
-              <motion.li
-                key={product._id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white shadow-sm rounded-lg overflow-hidden border border-gray-100 hover:shadow-md transition-shadow"
-              >
-                <div className="p-4 sm:p-6 flex items-center">
-                  <div className="flex-shrink-0 relative">
-                    <Image
-                      src={product.images?.[0] || 'https://via.placeholder.com/150'}
-                      alt={product.title}
-                      width={100}
-                      height={100}
-                      className="w-20 h-20 rounded-md object-center object-cover sm:w-24 sm:h-24"
-                    />
-                    <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm flex items-center">
-                      <CheckCircle className="w-3 h-3 mr-1" />
-                      Booked
-                    </div>
-                  </div>
-
-                  <div className="ml-4 flex-1 flex flex-col justify-between sm:ml-6">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="text-lg font-medium text-gray-900">
-                          <Link href={`/product/${product._id}`} className="hover:text-blue-600 transition-colors">
-                            {product.title}
-                          </Link>
-                        </h3>
-                        <p className="mt-1 text-sm text-gray-500">{product.brand} {product.model}</p>
-                        <div className="mt-2 flex items-center text-sm text-gray-500">
-                          <Clock className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
-                          <p>Inquiry received</p>
+            {cart.map((product, index) => {
+              const statusInfo = getOrderStatus(product._id);
+              
+              return (
+                <motion.li
+                  key={product._id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="bg-white shadow-sm rounded-lg overflow-hidden border border-gray-100 hover:shadow-md transition-shadow"
+                >
+                  <div className="p-4 sm:p-6 flex items-center">
+                    <div className="flex-shrink-0 relative">
+                      <Image
+                        src={product.images?.[0] || 'https://via.placeholder.com/150'}
+                        alt={product.title}
+                        width={100}
+                        height={100}
+                        className="w-20 h-20 rounded-md object-center object-cover sm:w-24 sm:h-24"
+                      />
+                      {statusInfo && (
+                        <div className={`absolute -top-2 -right-2 ${statusInfo.bg} ${statusInfo.color} text-xs font-bold px-2 py-1 rounded-full shadow-sm flex items-center border border-current`}>
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                          {statusInfo.label}
                         </div>
+                      )}
+                    </div>
+
+                    <div className="ml-4 flex-1 flex flex-col justify-between sm:ml-6">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="text-lg font-medium text-gray-900">
+                            <Link href={`/product/${product._id}`} className="hover:text-blue-600 transition-colors">
+                              {product.title}
+                            </Link>
+                          </h3>
+                          <p className="mt-1 text-sm text-gray-500">{product.brand} {product.model}</p>
+                          
+                          <div className="mt-2 flex items-center text-sm">
+                            {loading ? (
+                              <span className="text-gray-400">Loading status...</span>
+                            ) : statusInfo ? (
+                              <div className={`flex items-center ${statusInfo.color}`}>
+                                <Clock className="flex-shrink-0 mr-1.5 h-4 w-4" />
+                                <p className="font-medium">Status: {statusInfo.label}</p>
+                              </div>
+                            ) : (
+                              <div className="flex items-center text-gray-400">
+                                <AlertCircle className="flex-shrink-0 mr-1.5 h-4 w-4" />
+                                <p>Not yet submitted</p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <button
+                          onClick={() => removeFromCart(product._id)}
+                          className="text-gray-400 hover:text-red-500 transition-colors p-2"
+                          title="Remove from list"
+                        >
+                          <Trash2 className="h-5 w-5" />
+                        </button>
                       </div>
-                      
-                      <button
-                        onClick={() => removeFromCart(product._id)}
-                        className="text-gray-400 hover:text-red-500 transition-colors p-2"
-                        title="Remove from list"
-                      >
-                        <Trash2 className="h-5 w-5" />
-                      </button>
                     </div>
                   </div>
-                </div>
-              </motion.li>
-            ))}
+                </motion.li>
+              );
+            })}
           </AnimatePresence>
         </ul>
 
