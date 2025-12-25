@@ -1,12 +1,12 @@
 export default function robots() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://ministryofmobiles.vercel.app';
-  
+  const baseUrl = "https://www.ministryofmobiles.club";
+
   return {
     rules: {
-      userAgent: '*',
-      allow: '/',
-      disallow: '/admin/',
+      userAgent: "*",
+      allow: "/",
+      disallow: "/admin/",
     },
     sitemap: `${baseUrl}/sitemap.xml`,
-  }
+  };
 }
