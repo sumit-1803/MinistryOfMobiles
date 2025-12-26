@@ -37,10 +37,24 @@ export default function InventoryPage() {
   const handleEditClick = (item) => {
     setEditingItem(item);
     setEditForm({
-      productName: item.productName,
-      expectedSellingPrice: item.expectedSellingPrice,
-      condition: item.condition,
-      status: item.status
+      productName: item.productName || '',
+      brand: item.brand || '',
+      category: item.category || '',
+      imei1: item.imei1 || '',
+      imei2: item.imei2 || '',
+      serialNumber: item.serialNumber || '',
+      storage: item.storage || '',
+      ram: item.ram || '',
+      color: item.color || '',
+      batteryHealth: item.batteryHealth || '',
+      accessoriesIncluded: item.accessoriesIncluded || false,
+      condition: item.condition || 'Good',
+      physicalDamage: item.physicalDamage || '',
+      warrantyType: item.warrantyType || 'No Warranty',
+      warrantyValidTill: item.warrantyValidTill ? new Date(item.warrantyValidTill).toISOString().split('T')[0] : '',
+      purchasePrice: item.purchasePrice || '',
+      expectedSellingPrice: item.expectedSellingPrice || '',
+      status: item.status || 'Available'
     });
     setIsEditModalOpen(true);
   };
@@ -144,7 +158,7 @@ export default function InventoryPage() {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IMEI / Serial</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Condition</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price (Buy/Exp. Sell)</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price (Buy/Exp. Sell)</th>
+
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
@@ -240,63 +254,135 @@ export default function InventoryPage() {
                 <X className="w-6 h-6" />
               </button>
             </div>
-            <form onSubmit={handleUpdateItem} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Product Name</label>
-                <input 
-                  type="text" 
-                  className="mt-1 block w-full border rounded-md p-2"
-                  value={editForm.productName}
-                  onChange={e => setEditForm({...editForm, productName: e.target.value})}
-                />
+            <form onSubmit={handleUpdateItem} className="space-y-4 max-h-[80vh] overflow-y-auto pr-2">
+              
+              {/* Basic Info */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700">Product Name</label>
+                  <input type="text" className="mt-1 block w-full border rounded-md p-2" value={editForm.productName} onChange={e => setEditForm({...editForm, productName: e.target.value})} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Brand</label>
+                  <input type="text" className="mt-1 block w-full border rounded-md p-2" value={editForm.brand} onChange={e => setEditForm({...editForm, brand: e.target.value})} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Category</label>
+                  <select className="mt-1 block w-full border rounded-md p-2" value={editForm.category} onChange={e => setEditForm({...editForm, category: e.target.value})}>
+                    <option value="">Select...</option>
+                    <option value="phone">Phone</option>
+                    <option value="tablet">Tablet</option>
+                    <option value="laptop">Laptop</option>
+                    <option value="audio">Audio</option>
+                    <option value="watch">Watch</option>
+                    <option value="accessories">Accessories</option>
+                  </select>
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Expected Selling Price</label>
-                <input 
-                  type="number" 
-                  className="mt-1 block w-full border rounded-md p-2"
-                  value={editForm.expectedSellingPrice}
-                  onChange={e => setEditForm({...editForm, expectedSellingPrice: e.target.value})}
-                />
+
+              {/* Identification */}
+              <div className="grid grid-cols-2 gap-4 border-t pt-4">
+                <div className="col-span-2">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-2">Identification</h3>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">IMEI 1</label>
+                  <input type="text" className="mt-1 block w-full border rounded-md p-2" value={editForm.imei1} onChange={e => setEditForm({...editForm, imei1: e.target.value})} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">IMEI 2</label>
+                  <input type="text" className="mt-1 block w-full border rounded-md p-2" value={editForm.imei2} onChange={e => setEditForm({...editForm, imei2: e.target.value})} />
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700">Serial Number</label>
+                  <input type="text" className="mt-1 block w-full border rounded-md p-2" value={editForm.serialNumber} onChange={e => setEditForm({...editForm, serialNumber: e.target.value})} />
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Condition</label>
-                <select 
-                  className="mt-1 block w-full border rounded-md p-2"
-                  value={editForm.condition}
-                  onChange={e => setEditForm({...editForm, condition: e.target.value})}
-                >
-                  <option>Like New</option>
-                  <option>Excellent</option>
-                  <option>Good</option>
-                  <option>Fair</option>
-                </select>
+
+              {/* Specs */}
+              <div className="grid grid-cols-2 gap-4 border-t pt-4">
+                <div className="col-span-2">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-2">Specifications</h3>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Storage</label>
+                  <input type="text" className="mt-1 block w-full border rounded-md p-2" value={editForm.storage} onChange={e => setEditForm({...editForm, storage: e.target.value})} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">RAM</label>
+                  <input type="text" className="mt-1 block w-full border rounded-md p-2" value={editForm.ram} onChange={e => setEditForm({...editForm, ram: e.target.value})} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Color</label>
+                  <input type="text" className="mt-1 block w-full border rounded-md p-2" value={editForm.color} onChange={e => setEditForm({...editForm, color: e.target.value})} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Battery Health (%)</label>
+                  <input type="number" className="mt-1 block w-full border rounded-md p-2" value={editForm.batteryHealth} onChange={e => setEditForm({...editForm, batteryHealth: e.target.value})} />
+                </div>
+                <div className="col-span-2 flex items-center">
+                  <input type="checkbox" id="accessories" className="h-4 w-4 text-blue-600 border-gray-300 rounded" checked={editForm.accessoriesIncluded} onChange={e => setEditForm({...editForm, accessoriesIncluded: e.target.checked})} />
+                  <label htmlFor="accessories" className="ml-2 block text-sm text-gray-900">Accessories Included</label>
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Status</label>
-                <select 
-                  className="mt-1 block w-full border rounded-md p-2"
-                  value={editForm.status}
-                  onChange={e => setEditForm({...editForm, status: e.target.value})}
-                >
-                  <option>Available</option>
-                  <option>Sold</option>
-                </select>
+
+              {/* Condition & Warranty */}
+              <div className="grid grid-cols-2 gap-4 border-t pt-4">
+                <div className="col-span-2">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-2">Condition & Warranty</h3>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Condition</label>
+                  <select className="mt-1 block w-full border rounded-md p-2" value={editForm.condition} onChange={e => setEditForm({...editForm, condition: e.target.value})}>
+                    <option>Like New</option>
+                    <option>Excellent</option>
+                    <option>Good</option>
+                    <option>Fair</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Warranty Type</label>
+                  <select className="mt-1 block w-full border rounded-md p-2" value={editForm.warrantyType} onChange={e => setEditForm({...editForm, warrantyType: e.target.value})}>
+                    <option>No Warranty</option>
+                    <option>Shop Warranty</option>
+                    <option>Brand Warranty</option>
+                  </select>
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700">Warranty Valid Till</label>
+                  <input type="date" className="mt-1 block w-full border rounded-md p-2" value={editForm.warrantyValidTill} onChange={e => setEditForm({...editForm, warrantyValidTill: e.target.value})} />
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700">Physical Damage / Notes</label>
+                  <textarea className="mt-1 block w-full border rounded-md p-2" rows="2" value={editForm.physicalDamage} onChange={e => setEditForm({...editForm, physicalDamage: e.target.value})}></textarea>
+                </div>
               </div>
-              <div className="flex justify-end gap-2 mt-6">
-                <button 
-                  type="button" 
-                  onClick={() => setIsEditModalOpen(false)}
-                  className="px-4 py-2 border rounded-md hover:bg-gray-50"
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit" 
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                >
-                  Save Changes
-                </button>
+
+              {/* Financial & Status */}
+              <div className="grid grid-cols-2 gap-4 border-t pt-4">
+                <div className="col-span-2">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-2">Financial & Status</h3>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Purchase Price</label>
+                  <input type="number" className="mt-1 block w-full border rounded-md p-2" value={editForm.purchasePrice} onChange={e => setEditForm({...editForm, purchasePrice: e.target.value})} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Exp. Selling Price</label>
+                  <input type="number" className="mt-1 block w-full border rounded-md p-2" value={editForm.expectedSellingPrice} onChange={e => setEditForm({...editForm, expectedSellingPrice: e.target.value})} />
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700">Status</label>
+                  <select className="mt-1 block w-full border rounded-md p-2" value={editForm.status} onChange={e => setEditForm({...editForm, status: e.target.value})}>
+                    <option>Available</option>
+                    <option>Sold</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 mt-6 pt-4 border-t sticky bottom-0 bg-white">
+                <button type="button" onClick={() => setIsEditModalOpen(false)} className="px-4 py-2 border rounded-md hover:bg-gray-50">Cancel</button>
+                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Save Changes</button>
               </div>
             </form>
           </div>
