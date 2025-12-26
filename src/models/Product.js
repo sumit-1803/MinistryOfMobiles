@@ -23,11 +23,6 @@ const ProductSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'Please specify the price.'],
   },
-  condition: {
-    type: String,
-    required: [true, 'Please specify the condition.'],
-    enum: ['like new', 'excellent', 'good'],
-  },
   description: {
     type: String,
     required: [true, 'Please provide a description.'],
@@ -36,7 +31,7 @@ const ProductSchema = new mongoose.Schema({
     type: [String],
     default: [],
   },
-  isAvailable: {
+  isActive: {
     type: Boolean,
     default: true,
   },
@@ -49,7 +44,7 @@ const ProductSchema = new mongoose.Schema({
 // Force re-compilation if enum is outdated (development fix)
 if (mongoose.models.Product) {
   const currentEnum = mongoose.models.Product.schema.path('category').enumValues;
-  if (!currentEnum.includes('watch')) {
+  if (!currentEnum.includes('watch') || !mongoose.models.Product.schema.path('description')) {
     delete mongoose.models.Product;
   }
 }

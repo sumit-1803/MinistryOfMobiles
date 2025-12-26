@@ -9,7 +9,7 @@ export default async function Navbar() {
   const session = await getSession();
 
   return (
-    <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
+    <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50 print:hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Left: Logo */}
@@ -29,10 +29,10 @@ export default async function Navbar() {
               Tablets
             </Link>
             <Link href="/catalog?category=macbook" className="text-gray-600 hover:text-gray-900 text-sm font-medium">
-              Mac
+              Laptops
             </Link>
             <Link href="/catalog?category=audio" className="text-gray-600 hover:text-gray-900 text-sm font-medium">
-              AirPods
+              Audio
             </Link>
             <Link href="/catalog?category=watch" className="text-gray-600 hover:text-gray-900 text-sm font-medium">
               Watches

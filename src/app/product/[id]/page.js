@@ -69,21 +69,18 @@ export default async function ProductDetail({ params }) {
                   <dt className="text-sm font-medium text-gray-500">Model</dt>
                   <dd className="mt-1 text-sm text-gray-900">{product.model}</dd>
                 </div>
+
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Condition</dt>
-                  <dd className="mt-1 text-sm text-gray-900 capitalize">{product.condition}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">Availability</dt>
-                  <dd className={`mt-1 text-sm font-medium ${product.isAvailable ? 'text-green-600' : 'text-red-600'}`}>
-                    {product.isAvailable ? 'In Stock' : 'Sold Out'}
+                  <dt className="text-sm font-medium text-gray-500">Status</dt>
+                  <dd className={`mt-1 text-sm font-medium ${product.isActive ? 'text-green-600' : 'text-red-600'}`}>
+                    {product.isActive ? 'Active' : 'Discontinued'}
                   </dd>
                 </div>
               </dl>
             </div>
 
             <div className="mt-10 flex sm:flex-col1">
-              {product.isAvailable ? (
+              {product.isActive ? (
                 <Link
                   href={`/checkout/${product._id}`}
                   className="max-w-xs flex-1 bg-blue-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-blue-500 sm:w-full"
@@ -95,7 +92,7 @@ export default async function ProductDetail({ params }) {
                   disabled
                   className="max-w-xs flex-1 bg-gray-400 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white cursor-not-allowed sm:w-full"
                 >
-                  Sold Out
+                  Unavailable
                 </button>
               )}
             </div>

@@ -78,3 +78,21 @@ export async function verifyLoginOTP(prevState, formData) {
 
   redirect('/catalog');
 }
+
+export async function getWishlist() {
+  await dbConnect();
+  const session = await import('@/lib/auth').then(mod => mod.getSession());
+  
+  if (!session?.user?.id) return null;
+
+  const customer = await Customer.findById(session.user.id).populate('wishlist');
+  if (!customer) return [];
+
+  // Sanitize and return wishlist items
+  return customer.wishlist.map(product => ({
+    ...product.toObject(),
+    _id: product._id.toString(),
+    createdAt: product.createdAt?.toISOString(),
+    updatedAt: product.updatedAt?.toISOString(),
+  }));
+}

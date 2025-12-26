@@ -1,6 +1,7 @@
 import dbConnect from '@/lib/db';
 import Product from '@/models/Product';
 import Order from '@/models/Order';
+import InventoryItem from '@/models/InventoryItem';
 import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
@@ -9,7 +10,7 @@ export default async function Dashboard() {
   await dbConnect();
 
   const totalProducts = await Product.countDocuments();
-  const availableProducts = await Product.countDocuments({ isAvailable: true });
+  const availableInventory = await InventoryItem.countDocuments({ status: 'Available' });
   const totalOrders = await Order.countDocuments();
   const newOrders = await Order.countDocuments({ status: 'new' });
 
@@ -56,14 +57,14 @@ export default async function Dashboard() {
               <div className="ml-5 w-0 flex-1">
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 truncate">Available Stock</dt>
-                  <dd className="text-3xl font-semibold text-gray-900">{availableProducts}</dd>
+                  <dd className="text-3xl font-semibold text-gray-900">{availableInventory}</dd>
                 </dl>
               </div>
             </div>
           </div>
           <div className="bg-gray-50 px-5 py-3">
             <div className="text-sm">
-              <Link href="/admin/products" className="font-medium text-blue-700 hover:text-blue-900">
+              <Link href="/admin/inventory" className="font-medium text-blue-700 hover:text-blue-900">
                 Manage inventory
               </Link>
             </div>

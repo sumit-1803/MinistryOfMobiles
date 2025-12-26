@@ -10,7 +10,7 @@ export default async function Catalog({ searchParams }) {
 
   const { category, minPrice, maxPrice, search, sort } = await searchParams;
 
-  const query = { isAvailable: true };
+  const query = { isActive: true };
 
   if (category) {
     query.category = category;

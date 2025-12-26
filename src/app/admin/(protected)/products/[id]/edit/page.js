@@ -7,7 +7,7 @@ import { notFound } from 'next/navigation';
 export default async function EditProduct({ params }) {
   await dbConnect();
   const { id } = await params;
-  const product = await Product.findById(id);
+  const product = await Product.findById(id).lean();
 
   if (!product) {
     notFound();
@@ -20,10 +20,9 @@ export default async function EditProduct({ params }) {
     brand: product.brand,
     model: product.model,
     price: product.price,
-    condition: product.condition,
-    description: product.description,
+    description: product.description || '',
     images: product.images,
-    isAvailable: product.isAvailable,
+    isActive: product.isActive,
   };
 
   const updateAction = updateProduct.bind(null, product._id);
@@ -32,7 +31,7 @@ export default async function EditProduct({ params }) {
     <div>
       <h1 className="text-2xl font-bold text-gray-900 mb-8">Edit Product</h1>
       <div className="bg-white shadow px-4 py-5 sm:rounded-lg sm:p-6">
-        <ProductForm action={updateAction} initialData={initialData} />
+        <ProductForm key={product._id} action={updateAction} initialData={initialData} />
       </div>
     </div>
   );

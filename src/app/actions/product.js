@@ -14,10 +14,9 @@ export async function createProduct(prevState, formData) {
     brand: formData.get('brand'),
     model: formData.get('model'),
     price: Number(formData.get('price')),
-    condition: formData.get('condition'),
     description: formData.get('description'),
     images: formData.get('images')?.split(',').map(s => s.trim()).filter(Boolean) || [],
-    isAvailable: formData.get('isAvailable') === 'on',
+    isActive: formData.get('isActive') === 'on',
   };
 
   try {
@@ -40,11 +39,13 @@ export async function updateProduct(id, prevState, formData) {
     brand: formData.get('brand'),
     model: formData.get('model'),
     price: Number(formData.get('price')),
-    condition: formData.get('condition'),
     description: formData.get('description'),
     images: formData.get('images')?.split(',').map(s => s.trim()).filter(Boolean) || [],
-    isAvailable: formData.get('isAvailable') === 'on',
+    isActive: formData.get('isActive') === 'on',
   };
+
+  console.log('DEBUG: Update Product ID:', id);
+  console.log('DEBUG: Received Description:', rawFormData.description);
 
   try {
     await Product.findByIdAndUpdate(id, rawFormData);
@@ -65,10 +66,13 @@ export async function deleteProduct(id) {
   revalidatePath('/catalog');
 }
 
-export async function markAsSold(id) {
+export async function toggleActive(id) {
   await dbConnect();
-  await Product.findByIdAndUpdate(id, { isAvailable: false });
-  revalidatePath('/admin/products');
-  revalidatePath('/catalog');
-  revalidatePath(`/product/${id}`);
+  const product = await Product.findById(id);
+  if (product) {
+    await Product.findByIdAndUpdate(id, { isActive: !product.isActive });
+    revalidatePath('/admin/products');
+    revalidatePath('/catalog');
+    revalidatePath(`/product/${id}`);
+  }
 }

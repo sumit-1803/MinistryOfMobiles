@@ -1,23 +1,45 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect } from 'react';
+import { getWishlist } from '@/app/actions/customerAuth';
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
 
-  // Load cart from localStorage on mount
+  // Load cart from localStorage on mount and sync with backend
   useEffect(() => {
-    const savedCart = localStorage.getItem('mom_cart');
-    if (savedCart) {
-      try {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setCart(JSON.parse(savedCart));
-      } catch (e) {
-        console.error('Failed to parse cart', e);
+    const syncCart = async () => {
+      // First load from local storage
+      const savedCart = localStorage.getItem('mom_cart');
+      let localCart = [];
+      if (savedCart) {
+        try {
+          localCart = JSON.parse(savedCart);
+          setCart(localCart);
+        } catch (e) {
+          console.error('Failed to parse cart', e);
+        }
       }
-    }
+
+      // Then try to fetch from backend (if logged in)
+      try {
+        const serverWishlist = await getWishlist();
+        // If server returns a list (even empty), it means user is logged in and this is the source of truth
+        if (serverWishlist !== null) {
+          const serverCart = serverWishlist.map(item => ({
+            ...item,
+            quantity: 1 // Default quantity
+          }));
+          setCart(serverCart);
+        }
+      } catch (error) {
+        console.error('Failed to sync cart', error);
+      }
+    };
+
+    syncCart();
   }, []);
 
   // Save cart to localStorage whenever it changes

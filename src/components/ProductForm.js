@@ -120,23 +120,7 @@ export default function ProductForm({ action, initialData }) {
               </div>
             </div>
 
-            <div className="sm:col-span-3">
-              <label htmlFor="condition" className="block text-sm font-medium text-gray-700">
-                Condition
-              </label>
-              <div className="mt-1">
-                <select
-                  id="condition"
-                  name="condition"
-                  defaultValue={initialData?.condition || 'excellent'}
-                  className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border placeholder-gray-500 text-gray-900"
-                >
-                  <option value="like new">Like New</option>
-                  <option value="excellent">Excellent</option>
-                  <option value="good">Good</option>
-                </select>
-              </div>
-            </div>
+
 
             <div className="sm:col-span-6">
               <label htmlFor="description" className="block text-sm font-medium text-gray-700">
@@ -173,16 +157,16 @@ export default function ProductForm({ action, initialData }) {
             <div className="relative flex items-start sm:col-span-6">
               <div className="flex items-center h-5">
                 <input
-                  id="isAvailable"
-                  name="isAvailable"
+                  id="isActive"
+                  name="isActive"
                   type="checkbox"
-                  defaultChecked={initialData ? initialData.isAvailable : true}
+                  defaultChecked={initialData ? initialData.isActive : true}
                   className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
                 />
               </div>
               <div className="ml-3 text-sm">
-                <label htmlFor="isAvailable" className="font-medium text-gray-700">
-                  Available for sale
+                <label htmlFor="isActive" className="font-medium text-gray-700">
+                  Active (Visible in Catalog)
                 </label>
               </div>
             </div>

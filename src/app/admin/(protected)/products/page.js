@@ -1,13 +1,25 @@
 import dbConnect from '@/lib/db';
 import Product from '@/models/Product';
 import Link from 'next/link';
-import { deleteProduct, markAsSold } from '@/app/actions/product';
+import { deleteProduct, toggleActive } from '@/app/actions/product';
+import AdminSearchBar from '@/components/admin/AdminSearchBar';
 
 export const dynamic = 'force-dynamic';
 
-export default async function AdminProducts() {
+export default async function AdminProducts({ searchParams }) {
   await dbConnect();
-  const products = await Product.find({}).sort({ createdAt: -1 });
+  const { search } = await searchParams;
+
+  const query = {};
+  if (search) {
+    query.$or = [
+      { title: { $regex: search, $options: 'i' } },
+      { brand: { $regex: search, $options: 'i' } },
+      { model: { $regex: search, $options: 'i' } },
+    ];
+  }
+
+  const products = await Product.find(query).sort({ createdAt: -1 });
 
   return (
     <div>
@@ -18,7 +30,8 @@ export default async function AdminProducts() {
             A list of all products in your catalog including their title, price, and status.
           </p>
         </div>
-        <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+        <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none flex items-center gap-4">
+          <AdminSearchBar placeholder="Search products..." />
           <Link
             href="/admin/products/new"
             className="inline-flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:w-auto"
@@ -60,13 +73,13 @@ export default async function AdminProducts() {
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">{product.category}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">₹{product.price.toLocaleString()}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {product.isAvailable ? (
+                        {product.isActive ? (
                           <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
-                            Available
+                            Active
                           </span>
                         ) : (
-                          <span className="inline-flex rounded-full bg-red-100 px-2 text-xs font-semibold leading-5 text-red-800">
-                            Sold
+                          <span className="inline-flex rounded-full bg-gray-100 px-2 text-xs font-semibold leading-5 text-gray-800">
+                            Inactive
                           </span>
                         )}
                       </td>
@@ -74,13 +87,11 @@ export default async function AdminProducts() {
                         <Link href={`/admin/products/${product._id}/edit`} className="text-blue-600 hover:text-blue-900">
                           Edit
                         </Link>
-                        {product.isAvailable && (
-                           <form action={markAsSold.bind(null, product._id)} className="inline">
-                              <button type="submit" className="text-orange-600 hover:text-orange-900">
-                                Mark Sold
-                              </button>
-                           </form>
-                        )}
+                        <form action={toggleActive.bind(null, product._id)} className="inline">
+                            <button type="submit" className={`${product.isActive ? 'text-orange-600 hover:text-orange-900' : 'text-green-600 hover:text-green-900'}`}>
+                              {product.isActive ? 'Deactivate' : 'Activate'}
+                            </button>
+                        </form>
                         <form action={deleteProduct.bind(null, product._id)} className="inline">
                           <button type="submit" className="text-red-600 hover:text-red-900">
                             Delete

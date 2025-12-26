@@ -24,29 +24,36 @@ export default async function Home() {
   });
 
   // Fetch latest products
-  const latestProductsRaw = await Product.find({ isAvailable: true })
+  const latestProductsRaw = await Product.find({ isActive: true })
     .sort({ createdAt: -1 })
     .limit(4)
     .lean();
   const latestProducts = latestProductsRaw.map(sanitizeProduct);
 
+  // Fetch Phones
+  const phonesRaw = await Product.find({ 
+    isActive: true, 
+    category: 'phone' 
+  }).sort({ createdAt: -1 }).limit(4).lean();
+  const phones = phonesRaw.map(sanitizeProduct);
+
   // Fetch Laptops (MacBooks)
   const laptopsRaw = await Product.find({ 
-    isAvailable: true, 
+    isActive: true, 
     category: { $in: ['macbook', 'laptop'] } 
   }).sort({ createdAt: -1 }).limit(4).lean();
   const laptops = laptopsRaw.map(sanitizeProduct);
 
   // Fetch Watches
   const watchesRaw = await Product.find({ 
-    isAvailable: true, 
+    isActive: true, 
     category: 'watch' 
   }).sort({ createdAt: -1 }).limit(4).lean();
   const watches = watchesRaw.map(sanitizeProduct);
 
   // Fetch iPads
   const ipadsRaw = await Product.find({ 
-    isAvailable: true, 
+    isActive: true, 
     category: { $in: ['ipad', 'tablet'] } 
   }).sort({ createdAt: -1 }).limit(4).lean();
   const ipads = ipadsRaw.map(sanitizeProduct);
@@ -174,6 +181,16 @@ export default async function Home() {
           title="Latest Arrivals" 
           products={latestProducts} 
           viewAllLink="/catalog?sort=newest" 
+          wishlist={wishlist}
+        />
+      </FadeIn>
+
+      {/* Phones Section */}
+      <FadeIn delay={0.05}>
+        <ProductRow 
+          title="Premium Phones" 
+          products={phones} 
+          viewAllLink="/catalog?category=phone" 
           wishlist={wishlist}
         />
       </FadeIn>

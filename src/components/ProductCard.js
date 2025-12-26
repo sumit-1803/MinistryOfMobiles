@@ -27,9 +27,9 @@ export default function ProductCard({ product, isWishlisted = false }) {
             No Image
           </div>
         )}
-        {!product.isAvailable && (
-             <div className="absolute top-0 right-0 bg-red-500 text-white px-2 py-1 text-xs font-bold uppercase">
-                Sold Out
+        {!product.isActive && (
+             <div className="absolute top-0 right-0 bg-gray-500 text-white px-2 py-1 text-xs font-bold uppercase">
+                Inactive
              </div>
         )}
         
@@ -43,7 +43,7 @@ export default function ProductCard({ product, isWishlisted = false }) {
         </h3>
         <p className="text-sm text-gray-500">{product.brand} {product.model}</p>
         <div className="flex-1 flex flex-col justify-end">
-          <p className="text-sm italic text-gray-500">{product.condition}</p>
+
           <p className="text-base font-medium text-gray-900">₹{product.price.toLocaleString()}</p>
         </div>
       </div>
